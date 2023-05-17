@@ -1,0 +1,22 @@
+version: '3.6'
+services:
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "443:443"
+      - "8080:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+
+  attacker:
+    image: utkudarilmaz/hping3:latest
+    container_name: attacker
+    command: "--rand-source --flood nginx -p 8080"
+#    command: "--rand-source --udp --flood nginx -p 8080"
+#    command: "--rand-source -S --flood nginx -p 8080"
+#    command: "--rand-source -F --flood nginx -p 8080"
+#    command: "--rand-source -icmp --flood nginx -p 8080"
+    restart: always
